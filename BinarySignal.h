@@ -20,7 +20,6 @@ namespace Prog3 {
         }
     }
 
-
     struct Status {
         bool m_level;
         unsigned char m_duration;
@@ -61,21 +60,29 @@ namespace Prog3 {
         friend std::ostream &operator<<(std::ostream &out, const BinarySignal &bs);
         BinarySignal& operator = (const BinarySignal& a) noexcept;  //копирующий оператор присваивания
         BinarySignal& operator = (BinarySignal&& a) noexcept;   //перемещающий оператор присваивания
-        friend BinarySignal operator+(BinarySignal &a, const BinarySignal &b);
+        friend BinarySignal operator+(const BinarySignal &a, const BinarySignal &b);
         BinarySignal& operator*=(int n);
-        //BinarySignal& operator()(const char* bs, int n);
+        BinarySignal& operator()(const char* bs, int n, int size);
         Status& operator[](int n);
         const Status& operator[](int n) const;
         BinarySignal& operator~();
         BinarySignal& operator--();
         const BinarySignal operator--(int);
+        friend bool operator==(const BinarySignal& a, const BinarySignal& b);
 
-                //getтер
+                //геттеры
         [[nodiscard]] const Status* getM_ARRAY() const;
+        [[nodiscard]] int getM_SZ() const;
+        [[nodiscard]] int getM_LGHT() const;
+        [[nodiscard]] int getM_CNT() const;
 
     };
 }
 
-
+//посмотреть перегрузку индексирования у шустовой
+//проверить склеиваются ли ячейки массива и размер выделенной памяти у массива
+//написать нормальную перегрзку бинарного опреатора
+//починить второй конструктор
+//
 
 #endif //LAB3_BS_DINAMIC_BINARYSIGNAL_H

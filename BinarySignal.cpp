@@ -33,7 +33,6 @@ namespace Prog3 {
                 throw std::invalid_argument("ERROR! Illegal value from binary signal!");
         }
         initialization(size, length, string);
-        std::cout << "Second Constructor: " << this << std::endl;
     }
 
     //КОПИРУЮЩИЙ КОНСТРУКТОР
@@ -135,6 +134,7 @@ namespace Prog3 {
                 for (int i = 0; i < bs.m_size - 1; i++)
                     m_array[i + m_size] = bs.m_array[i + 1];
                 m_size += bs.m_size - 1;
+                m_count = m_count - 1;
             } else {
                 for (int i = 0; i < bs.m_size; i++)
                     m_array[i + m_size] = bs.m_array[i];
@@ -142,13 +142,13 @@ namespace Prog3 {
             }
             m_length += bs.m_length;
         }
+        m_count += bs.m_count;
         return *this;
     }
 
     //копирование сигнала n раз
     BinarySignal& BinarySignal::copy(int n) {
         BinarySignal tmp = *this;
-        mem_alloc(m_size + m_size);
         for (int i = 0; i < n - 1; i++)
             this->add(tmp);
         return *this;
@@ -241,10 +241,12 @@ namespace Prog3 {
         if (bs.m_size != 0)
             delete[] bs.m_array;
         int length;
+        std::cout << "Enter the size of string -> " << std::endl;
         getNum(in, length);
         if (length > 0) {
             int size = 1;
             char string[length + 1];
+            std::cout << "Enter the string (separated by a space) ->" << std::endl;
             getNum(in, string[0]);
             for (int i = 1; i < length; i++) {
                 getNum(in, string[i]);
@@ -259,7 +261,7 @@ namespace Prog3 {
 
     std::ostream &operator<<(std::ostream &out, const BinarySignal &bs) {
         if (bs.m_size == 0)
-            out << "Binary Signal is empty!" << std::endl;
+            out << "Binary Signal is empty!";
         else {
             std::cout << "Binary signal -> ";
             for (int i = 0; i < bs.m_size; i++)
@@ -288,28 +290,31 @@ namespace Prog3 {
     //ПЕРЕМЕЩАЮЩИЙ ОПЕРАТОР ПРИСВАИВАНИЯ
     BinarySignal &BinarySignal::operator=(BinarySignal &&a) noexcept {
         if (this != &a) {
-            int tmp = a.m_count;
-            a.m_count = m_count;
-            m_count = tmp;
+            int tmp = m_count;
+            m_count = a.m_count;
+            a.m_count = tmp;
 
-            tmp = a.m_size;
-            a.m_size = m_size;
-            m_size = tmp;
+            tmp = m_size;
+            m_size = a.m_size;
+            a.m_size = tmp;
 
-            tmp = a.m_length;
-            a.m_length = m_length;
-            m_length = tmp;
+            tmp = m_length;
+            m_length = a.m_length;
+            a.m_length = tmp;
 
-            Status *t = a.m_array;
-            a.m_array = m_array;
-            m_array = t;
+            Status *t = m_array;
+            m_array = a.m_array;
+            a.m_array = t;
         }
         return *this;
     }
 
-    BinarySignal operator+(BinarySignal &a, const BinarySignal &b) {
-        BinarySignal c;
-        c = a.add(b);
+    BinarySignal operator+(const BinarySignal &a, const BinarySignal &b) {
+        BinarySignal c(a);
+        c.add(b);
+        std::cout << "1: " << a.getM_SZ() << " " << a.getM_CNT() << " " << a.getM_LGHT() ;
+        std::cout << "2: " << b.getM_SZ() << " " << b.getM_CNT() << " " << b.getM_LGHT() ;
+        std::cout << "rez: " << c.getM_SZ() << " " << c.getM_CNT() << " " << c.getM_LGHT() ;
         return c;
     }
 
@@ -319,10 +324,10 @@ namespace Prog3 {
         return *this;
     }
 
-//    BinarySignal& BinarySignal::operator()(const char* bs, int n) {
-//        initialization(n, bs);
-//        return *this;
-//    }
+    BinarySignal& BinarySignal::operator()(const char* bs, int n, int size) {
+        initialization(size, n, bs);
+        return *this;
+    }
 
 
     BinarySignal& BinarySignal::operator~() {
@@ -354,6 +359,20 @@ namespace Prog3 {
         return t;
     }
 
+    bool operator==(const BinarySignal &a, const BinarySignal& b) {
+        int t = 0;
+        for (int i = 0; i < a.m_size; i++) {
+            if (a.m_array[i].m_level == b.m_array[i].m_level
+            && a.m_array[i].m_duration == b.m_array[i].m_duration)
+                t++;
+        }
+        if (b.m_count == a.m_count && b.m_size == a.m_size &&
+        b.m_length == a.m_length && (t == a.m_size)) {
+            return true; }
+        else
+            return false;
+    }
+
 
                         //GETТЕРЫ
 
@@ -361,6 +380,17 @@ namespace Prog3 {
         return m_array;
     }
 
+    int BinarySignal::getM_SZ() const {
+        return m_size;
+    }
+
+    int BinarySignal::getM_LGHT() const {
+        return m_length;
+    }
+
+    int BinarySignal::getM_CNT() const {
+        return m_count;
+    }
 
 }
 

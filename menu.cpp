@@ -33,12 +33,13 @@ void secondConstructor(Prog3::BinarySignal &ptr) {
     int sz;
     std::cout << "Enter the number of elements in the binary signal ->";
     getPositiveNum(sz);
-    char sq[sz + 1];
+    char sq[sz];
     std::cout << "Enter the string of 0 and 1 ->" << std::endl;
-    for (int i = 0; i < sz; i++)
+    for (int i = 0; i < sz; i++) {
         std::cin >> sq[i];
+    }
     try {
-        Prog3::BinarySignal tmp(sz + 1, sq);
+        Prog3::BinarySignal tmp(sz, sq);
         ptr = tmp;
     }
     catch (std::length_error &le) {
