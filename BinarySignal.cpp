@@ -374,6 +374,7 @@ namespace Prog3 {
     }
 
 
+
                         //GETТЕРЫ
 
     const Status* BinarySignal::getM_ARRAY() const {

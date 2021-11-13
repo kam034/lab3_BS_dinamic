@@ -85,4 +85,5 @@ namespace Prog3 {
 //починить второй конструктор
 //
 
+
 #endif //LAB3_BS_DINAMIC_BINARYSIGNAL_H
